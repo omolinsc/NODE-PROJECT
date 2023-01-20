@@ -2,7 +2,7 @@ const Pet = require("./pet.model");
 
 const indexGet = async (req, res, next) => {
     try {
-        const pets = await Pet.find();
+        const pets = await Pet.find().populate("owner");
         return res.status(200).json(pets);
     } catch(error) {
         return next(error);
@@ -11,7 +11,7 @@ const indexGet = async (req, res, next) => {
 const getById = async (req, res, next) => {
     try {
         const {id} = req.params;
-        const found = await Pet.findById(id);
+        const found = await Pet.findById(id).populate("owner");
         return res.status(200).json(found);
     } catch(error) {
         return next(error);
@@ -20,25 +20,25 @@ const getById = async (req, res, next) => {
 
 //! pendiente implementar
 const getByOwner = async (req, res, next) => {
-    try {
-        const {owner} = req.params;
-        const found = await Pet.find(owner.id);
-        return res.status(200).json(found);
-    } catch(error) {
-        return next(error);
-    }
-};
+        try {
+            const {owner} = req.params;
+            const found = await Pet.find({owner:owner});
+            return res.status(200).json(found);
+        } catch(error) {
+            return next(error);
+        }
+    };
 
-//! pendiente implementar
-const getByCenter = async (req, res, next) => {
-    try {
-        const {center} = req.params;
-        const found = await Pet.find(center.id);
-        return res.status(200).json(found);
-    } catch(error) {
-        return next(error);
-    }
-};
+// //! pendiente implementar
+// const getByCenter = async (req, res, next) => {
+//     try {
+//         const {center} = req.params;
+//         const found = await Pet.find(center.id).populate("center");
+//         return res.status(200).json(found);
+//     } catch(error) {
+//         return next(error);
+//     }
+// };
 
 const createPost = async (req, res, next) => {
     try {
@@ -80,7 +80,7 @@ module.exports = {
     indexGet,
     getById,
     getByOwner,
-    getByCenter,
+    // getByCenter,
     createPost,
     editPut,
     deletePet,

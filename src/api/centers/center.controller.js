@@ -1,9 +1,9 @@
-const Owner = require("./owner.model");
+const Center = require("./center.model");
 
 const indexGet = async (req, res, next) => {
     try {
-        const owners = await Owner.find().populate("center");
-        return res.status(200).json(owners);
+        const centers = await Center.find();
+        return res.status(200).json(centers);
     } catch(error) {
         return next(error);
     }
@@ -11,7 +11,7 @@ const indexGet = async (req, res, next) => {
 const getById = async (req, res, next) => {
     try {
         const {id} = req.params;
-        const found = await Owner.findById(id);
+        const found = await Center.findById(id);
         return res.status(200).json(found);
     } catch(error) {
         return next(error);
@@ -21,7 +21,7 @@ const getById = async (req, res, next) => {
 const getByName = async (req, res, next) => {
     try {
         const {name} = req.params;
-        const found = await Owner.find({name:name});
+        const found = await Center.find({name:name});
         return res.status(200).json(found);
     } catch(error) {
         return next(error);
@@ -30,8 +30,8 @@ const getByName = async (req, res, next) => {
 
 const createPost = async (req, res, next) => {
     try {
-        const ownerToCreate = new Owner(req.body);
-        const created = await ownerToCreate.save();
+        const centerToCreate = new Center(req.body);
+        const created = await centerToCreate.save();
         console.log(created)
         return res.status(201).json(created);
     } catch(error) {
@@ -44,17 +44,17 @@ const editPut = async (req, res, next) => {
         const {id} = req.params;
         const fields = {...req.body};
         const options = {new: true};
-        const edited = await Owner.findByIdAndUpdate(id, fields, options);
+        const edited = await Center.findByIdAndUpdate(id, fields, options);
         return res.status(200).json(edited);
     } catch(error) {
         return next(error);
     }
 };
 
-const deleteOwner = async (req, res, next) => {
+const deleteCenter = async (req, res, next) => {
     try {
         const {id} = req.params;
-        const deleted = await Owner.deleteOne({_id:id});
+        const deleted = await Center.deleteOne({_id:id});
         if (deleted.deletedCount) {
             return res.status(200).json("[DELETE] Elemento eliminado")
         } else {
@@ -72,5 +72,5 @@ module.exports = {
     getByName,
     createPost,
     editPut,
-    deleteOwner,
+    deleteCenter,
 };

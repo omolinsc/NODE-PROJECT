@@ -1,14 +1,13 @@
 const express = require("express");
-const controller = require("./pet.controller");
+const controller = require("./center.controller");
 
 const router = express.Router();
 
 router.get("/", controller.indexGet);
 router.get("/:id", controller.getById);
-router.get("/get/:owner", controller.getByOwner);
-// router.get("/get/:center", controller.getByCenter);
+router.get("/getbyname/:name", controller.getByName);
 router.post("/create", controller.createPost);
 router.put("/edit/:id", controller.editPut);
-router.delete("/delete/:id", controller.deletePet);
+router.delete("/delete/:id", controller.deleteCenter);
 
 module.exports = router;

@@ -25,10 +25,10 @@ const ownerSchema = new mongoose.Schema(
         phone: {
             type: Number,
         },
-        // center: {
-        //     type: mongoose.Types.ObjectId,
-        //     ref: "centers",
-        // }
+        center: {
+            type: mongoose.Types.ObjectId,
+            ref: "centers",
+        }
     },
     {
         timestamps: true,
