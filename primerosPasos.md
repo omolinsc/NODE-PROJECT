@@ -55,7 +55,7 @@
 10. Instalaremos MONGOOSE 
         => npm i mongoose
 
-11. creamos carpeta de "utils", dentro la carpeta de "db" y dentro de esta carpeta crearemos el archivo "db.js" e introduciremos el siguiente código:
+11. creamos carpeta de "src", dentro la de "utils", dentro la carpeta de "db" y dentro de esta carpeta crearemos el archivo "db.js" e introduciremos el siguiente código:
 
     =>  const mongoose = require("mongoose");
         require("dotenv").config();
