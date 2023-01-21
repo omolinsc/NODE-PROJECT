@@ -7,6 +7,10 @@ const isAuth = (req, res, next) => {
     return next();
 };
 
+// Middleware para saber si somos admins o no
+// 1 . Puede haber usuario o no
+// 2 . Si hay usuario tiene que ser Admin
+
 const isAdmin = (req, res, next) => {
     if(!req.user){
         const error = new Error("[AUTHENTICATE ERROR] You need to LogIn to access");

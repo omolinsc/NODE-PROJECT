@@ -1,8 +1,7 @@
+const LocalStrategy = require("passport-local").Strategy;
 const User = require("../../api/users/user.model");
 const bcrypt = require("bcrypt");
 const {isValidEmail, isValidPassword} = require("../validations");
-
-const LocalStrategy = require("passport-local").Strategy;
 
 const registerStrategy = new LocalStrategy(
     {
@@ -36,11 +35,15 @@ const registerStrategy = new LocalStrategy(
             });
 
             const created = await userToBeCreated.save();
-            return done(null, created);
+            const userWithoutPassword = created.toObject();
+            Reflect.deleteProperty(userWithoutPassword, "password");
+            return done(null, userWithoutPassword);
         } catch(error) {
             return done(error);
         }
     }
 );
 
-module.exports = registerStrategy;
+module.exports = {
+    registerStrategy,
+};

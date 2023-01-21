@@ -3,10 +3,13 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const cors = require("cors");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const passport = require("passport");
 
 const auth = require("./src/utils/auth/index");
-auth.activarAutentication();
+auth.activarAutenticacion();
+const {isAuth} = require("./src/utils/auth/middlewares/authMiddlewares");
 
 const db = require("./src/utils/db/db");
 db.connectDb();
@@ -23,13 +26,49 @@ server = express();
 
 const router = express.Router();
 
+// se utiliza para admitir peticiones desde otro servidor, front o app
+server.use(cors());
+
+// EXPRESS-SESSION : para controlar las sesiones de usuarios activos
+server.use(
+    session({
+        secret: process.env.SESSION_SECRET, // Frase aleatoria y inventada, tiene que ser larga y difícil
+        saveUninitialized: true,
+        resave: false,
+        cookie: {maxAge: 60 * 60 * 1000}, // tiempo de vida de las cookies (en ms)
+        store: MongoStore.create({mongoUrl: db.DB_URL}),
+    })
+);
+
+
 server.use("/", router);
+
+// convierte a json cuando enviamos un post al servidor
 server.use(express.json());
+
+// convierte cuando mandamos un form o formData al servidor
+server.use(express.urlencoded({extended:true}));
+
+// Autentificación
+server.use(passport.initialize());
+server.use(passport.session());
 
 server.use("/pets", petsRoutes);
 server.use("/owners", ownersRoutes);
 server.use("/centers", centersRoutes);
 server.use("/users", usersRoutes);
+
+// para revisar si entramos una ruta errónea
+server.use("*", (req, res, next) => {
+    return res.status(404).json("[ERROR] No se encuentra la URL");
+})
+
+// control de errores
+server.use((error, req, res, next) => {
+    const status = error.status || 500;
+    const message = error.message || "[ERROR] Unexpected Error";
+    return res.status(status).json(message);
+})
 
 router.get("/", (req, res) => {
     return res.status(200).json("[SERVER WORKING PROPERLY]");
