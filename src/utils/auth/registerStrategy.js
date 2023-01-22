@@ -1,7 +1,8 @@
-const LocalStrategy = require("passport-local").Strategy;
-const User = require("../../api/users/user.model");
 const bcrypt = require("bcrypt");
-const {isValidEmail, isValidPassword} = require("../validations");
+const User = require("../../api/users/user.model");
+const {isValidEmail, isValidPassword} = require("./validations");
+
+const LocalStrategy = require("passport-local").Strategy;
 
 const registerStrategy = new LocalStrategy(
     {
@@ -9,7 +10,8 @@ const registerStrategy = new LocalStrategy(
         passwordField: "password",
         passReqToCallback: true,
     },
-    async (req, email, password, done) => {
+
+    async (req, email, password, done) => {  
         try {
             const userDB = await User.findOne({email: email.toLowerCase()});
             if (userDB) {
@@ -24,7 +26,6 @@ const registerStrategy = new LocalStrategy(
                 const error = new Error("[REGISTER] Password do not fit the rules (8 characters , 1 upperLetter, 1 number)");
                 return done(error, null);
             }
-
             const saltRounds = 10;
             const encryptedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -33,7 +34,7 @@ const registerStrategy = new LocalStrategy(
                 email,
                 password: encryptedPassword,
             });
-
+            
             const created = await userToBeCreated.save();
             const userWithoutPassword = created.toObject();
             Reflect.deleteProperty(userWithoutPassword, "password");

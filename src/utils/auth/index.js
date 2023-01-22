@@ -3,11 +3,11 @@ const User = require("../../api/users/user.model");
 const loginStrategy = require("./loginStrategy");
 const registerStrategy = require("./registerStrategy");
 
-// recoge la ID del usuario y actualiza la sesión
+
 passport.serializeUser((user,done) => {
+    console.log(user);
     done(null, user._id);
 });
-
 
 passport.deserializeUser(async(id, done) => {
     try {
@@ -18,11 +18,11 @@ passport.deserializeUser(async(id, done) => {
     }
 })
 
-const activarAutenticacion = () => {
-    passport.use("registro", registerStrategy);
+const runAuth = () => {
+    passport.use("register", registerStrategy);
     passport.use("login", loginStrategy);
 };
 
 module.exports = {
-    activarAutenticacion,
+    runAuth,
 };

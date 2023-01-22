@@ -8,11 +8,12 @@ const MongoStore = require("connect-mongo");
 const passport = require("passport");
 
 const auth = require("./src/utils/auth/index");
-auth.activarAutenticacion();
+auth.runAuth();
 const {isAuth} = require("./src/utils/auth/middlewares/authMiddlewares");
 
 const db = require("./src/utils/db/db");
-db.connectDb();
+db.connectDB();
+
 
 // All Routes imports
 const petsRoutes = require("./src/api/pets/pet.routes");
@@ -35,13 +36,15 @@ server.use(
         secret: process.env.SESSION_SECRET, // Frase aleatoria y inventada, tiene que ser larga y difícil
         saveUninitialized: true,
         resave: false,
-        cookie: {maxAge: 60 * 60 * 1000}, // tiempo de vida de las cookies (en ms)
+        cookie: {maxAge: 1 * 60 * 1000}, // tiempo de vida de las cookies (en ms)
         store: MongoStore.create({mongoUrl: db.DB_URL}),
     })
 );
 
+// Autentificación
+server.use(passport.initialize());
+server.use(passport.session());
 
-server.use("/", router);
 
 // convierte a json cuando enviamos un post al servidor
 server.use(express.json());
@@ -49,14 +52,12 @@ server.use(express.json());
 // convierte cuando mandamos un form o formData al servidor
 server.use(express.urlencoded({extended:true}));
 
-// Autentificación
-server.use(passport.initialize());
-server.use(passport.session());
 
 server.use("/pets", petsRoutes);
 server.use("/owners", ownersRoutes);
 server.use("/centers", centersRoutes);
 server.use("/users", usersRoutes);
+server.use("/", router);
 
 // para revisar si entramos una ruta errónea
 server.use("*", (req, res, next) => {

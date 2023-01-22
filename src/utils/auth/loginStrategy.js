@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const User = require("../../api/users/user.model");
-const {isValidEmail, isValidPassword} = require("../validations");
+const {isValidEmail, isValidPassword} = require("./validations");
 
 const LocalStrategy = require("passport-local").Strategy;
 
@@ -21,7 +21,7 @@ const loginStrategy = new LocalStrategy(
             const isValidUserPassword = await bcrypt.compare(password, userDB.password);
 
             if(!isValidUserPassword){
-                const error = new Error("[LOGIN ERROR] Las contraseñas no coinciden")
+                const error = new Error("[LOGIN ERROR] Las contraseñas no coinciden");
                 error.status = 400;
                 return done(error);
             };
