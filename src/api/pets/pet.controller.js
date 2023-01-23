@@ -18,16 +18,25 @@ const getById = async (req, res, next) => {
     }
 };
 
-//! pendiente implementar
 const getByOwner = async (req, res, next) => {
         try {
             const {owner} = req.params;
-            const found = await Pet.find({owner:owner});
+            const found = await Pet.find({owner:owner}).populate("owner");
             return res.status(200).json(found);
         } catch(error) {
             return next(error);
         }
     };
+
+const getByName = async (req, res, next) => {
+    try {
+        const {name} = req.params;
+        const found = await Pet.find({name:name}).populate("owner");
+        return res.status(200).json(found);
+    } catch(error) {
+        return next(error);
+    }
+};
 
 // //! pendiente implementar
 // const getByCenter = async (req, res, next) => {
@@ -79,6 +88,7 @@ const deletePet = async (req, res, next) => {
 module.exports = {
     indexGet,
     getById,
+    getByName,
     getByOwner,
     // getByCenter,
     createPost,

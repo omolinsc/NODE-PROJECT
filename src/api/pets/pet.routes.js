@@ -5,7 +5,8 @@ const router = express.Router();
 
 router.get("/", controller.indexGet);
 router.get("/:id", controller.getById);
-router.get("/get/:owner", controller.getByOwner);
+router.get("/getname/:name", controller.getByName);
+router.get("/getowner/:owner", controller.getByOwner);
 // router.get("/get/:center", controller.getByCenter);
 router.post("/create", controller.createPost);
 router.put("/edit/:id", controller.editPut);
