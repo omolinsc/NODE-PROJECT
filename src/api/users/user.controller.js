@@ -1,7 +1,7 @@
 const passport = require("passport");
 const User = require("./user.model");
 
-const indexGet = async (req, res, next) => {
+const indexGet = async ( req, res, next) => {
     try {
         const users = await User.find();
         return res.status(200).json(users);
@@ -13,13 +13,13 @@ const indexGet = async (req, res, next) => {
 const registerPost = (req, res, next) => {
     try {
         const done = (error, user) => {
+            if (error) return next(error);
             req.logIn(user, (error) => {
                 if (error) return next(error);
 
                 return res.status(201).json(user);
             });
         };
-
         passport.authenticate("register", done)(req);
     } catch (error) {
         return next(error);

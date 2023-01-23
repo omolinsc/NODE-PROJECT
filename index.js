@@ -41,17 +41,16 @@ server.use(
     })
 );
 
-// Autentificación
-server.use(passport.initialize());
-server.use(passport.session());
-
-
 // convierte a json cuando enviamos un post al servidor
 server.use(express.json());
 
 // convierte cuando mandamos un form o formData al servidor
 server.use(express.urlencoded({extended:true}));
 
+
+// Autentificación
+server.use(passport.initialize());
+server.use(passport.session());
 
 server.use("/pets", petsRoutes);
 server.use("/owners", ownersRoutes);
@@ -66,6 +65,7 @@ server.use("*", (req, res, next) => {
 
 // control de errores
 server.use((error, req, res, next) => {
+    console.log(error)
     const status = error.status || 500;
     const message = error.message || "[ERROR] Unexpected Error";
     return res.status(status).json(message);

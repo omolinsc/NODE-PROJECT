@@ -10,7 +10,6 @@ const registerStrategy = new LocalStrategy(
         passwordField: "password",
         passReqToCallback: true,
     },
-
     async (req, email, password, done) => {  
         try {
             const userDB = await User.findOne({email: email.toLowerCase()});
@@ -39,12 +38,11 @@ const registerStrategy = new LocalStrategy(
             const userWithoutPassword = created.toObject();
             Reflect.deleteProperty(userWithoutPassword, "password");
             return done(null, userWithoutPassword);
+            
         } catch(error) {
             return done(error);
         }
     }
 );
 
-module.exports = {
-    registerStrategy,
-};
+module.exports = registerStrategy;

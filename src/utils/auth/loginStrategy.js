@@ -29,7 +29,7 @@ const loginStrategy = new LocalStrategy(
             const userWithoutPassword = userDB.toObject();
             Reflect.deleteProperty(userWithoutPassword, "password");
 
-            return done(error, null);
+            return done(null, userWithoutPassword);
 
         } catch(error) {
             return done(error, null);
@@ -37,6 +37,4 @@ const loginStrategy = new LocalStrategy(
     }
 );
 
-module.exports = {
-    loginStrategy,
-};
+module.exports = loginStrategy;
